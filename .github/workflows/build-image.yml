@@ -1,0 +1,35 @@
+name: Build Linux 0.01 IMG
+
+on:
+  push:
+    branches: [main]  # or any branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Extract linux-0.01.tar.gz
+      run: |
+        mkdir linux-src
+        tar -xzf linux-0.01.tar.gz -C linux-src
+
+    - name: Create empty floppy image
+      run: |
+        dd if=/dev/zero of=linux01.img bs=1024 count=1440
+        mkfs.msdos linux01.img
+
+    - name: Copy Linux files to image
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mtools
+        mcopy -i linux01.img -s linux-src/* ::
+
+    - name: Upload IMG artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux01-image
+        path: linux01.img
