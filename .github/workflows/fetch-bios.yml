@@ -1,0 +1,30 @@
+name: Fetch BIOS files to main
+
+on:
+  workflow_dispatch:   # Manual trigger from Actions tab
+  push:
+    branches: [main]   # Optional: triggers on pushes to main
+
+jobs:
+  fetch-bios:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Download seabios.bin
+      run: |
+        curl -L -o seabios.bin https://raw.githubusercontent.com/copy/v86/62fd36e0bbf3da60a24be75c5245cdb11c062908/bios/seabios.bin
+
+    - name: Download vgabios.bin
+      run: |
+        curl -L -o vgabios.bin https://raw.githubusercontent.com/copy/v86/62fd36e0bbf3da60a24be75c5245cdb11c062908/bios/vgabios.bin
+
+    - name: Commit BIOS files to main
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add seabios.bin vgabios.bin
+        git commit -m "Update BIOS files from v86" || echo "No changes to commit"
+        git push origin main
