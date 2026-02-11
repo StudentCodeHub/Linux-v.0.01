@@ -6,37 +6,28 @@
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 20px; }
     #screen { width: 640px; height: 480px; margin: 20px auto; border: 1px solid #000; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
   </style>
 </head>
 <body>
 
 <h1>Linux 0.01 in Browser</h1>
-<p>Click “Start Linux” to boot Linux 0.01</p>
-<button id="startBtn">Start Linux</button>
 <div id="screen"></div>
 
-<script>
-document.getElementById("startBtn").addEventListener("click", function() {
-    // Load libv86.js from copy.sh
-    var script = document.createElement("script");
-    script.src = "https://copy.sh/v86/build/libv86.js";
-    script.onload = function() {
-        var emulator = new V86Starter({
-            memory_size: 16*1024*1024,
-            vga_memory_size: 2*1024*1024,
-            screen_container: document.getElementById("screen"),
-            bios: { url: "seabios.bin" },    // local file
-            vga_bios: { url: "vgabios.bin" }, // local file
-            fda: { url: "linux01.img" },      // local Linux 0.01 image
-            autostart: true
-        });
-    };
-    document.body.appendChild(script);
+<!-- Load v86 from hosted URL -->
+<script src="https://copy.sh/v86/v86.js"></script>
 
-    this.disabled = true;
-    this.innerText = "Booting Linux...";
-});
+<script>
+window.onload = function() {
+    var emulator = new V86Starter({
+        memory_size: 16*1024*1024,        // 16 MB RAM
+        vga_memory_size: 2*1024*1024,     // 2 MB Video RAM
+        screen_container: document.getElementById("screen"),
+        bios: { url: "seabios.bin" },     // local BIOS
+        vga_bios: { url: "vgabios.bin" }, // local VGA BIOS
+        fda: { url: "linux01.img" },      // local Linux 0.01 image
+        autostart: true                   // boot immediately
+    });
+};
 </script>
 
 </body>
