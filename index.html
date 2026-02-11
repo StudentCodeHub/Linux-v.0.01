@@ -18,17 +18,17 @@
 
 <script>
 document.getElementById("startBtn").addEventListener("click", function() {
-    // Load libv86.js from your fork or copy it to the repo
+    // Load libv86.js from copy.sh
     var script = document.createElement("script");
-    script.src = "libv86.js"; // place libv86.js in the same repo
+    script.src = "https://copy.sh/v86/build/libv86.js";
     script.onload = function() {
         var emulator = new V86Starter({
             memory_size: 16*1024*1024,
             vga_memory_size: 2*1024*1024,
             screen_container: document.getElementById("screen"),
-            bios: { url: "seabios.bin" },
-            vga_bios: { url: "vgabios.bin" },
-            fda: { url: "linux01.img" },
+            bios: { url: "seabios.bin" },    // local file
+            vga_bios: { url: "vgabios.bin" }, // local file
+            fda: { url: "linux01.img" },      // local Linux 0.01 image
             autostart: true
         });
     };
